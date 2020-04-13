@@ -1,0 +1,8 @@
+dit/cmd/ceh-cs-portal/__debug_bin
+web/**/node_modules
+dump.rdb
+__debug_bin
+data/
+testdata.sqlite
+*.sqlite
+dit/cmd/coupon-service/coupon/debug.test

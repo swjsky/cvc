@@ -1,0 +1,15 @@
+{
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "vetur.format.defaultFormatter.js": "vscode-typescript",
+  "vetur.format.defaultFormatter.ts": "vscode-typescript",
+  "files.autoSave": "afterDelay",
+  "window.zoomLevel": 0,
+  "go.autocompleteUnimportedPackages": true,
+  "go.gocodePackageLookupMode": "go",
+  "go.gotoSymbol.includeImports": true,
+  "go.useCodeSnippetsOnFunctionSuggest": true,
+  "go.inferGopath": true,
+  "go.gopath":"C:\\GoPath",
+  "go.useCodeSnippetsOnFunctionSuggestWithoutType": true,
+
+}

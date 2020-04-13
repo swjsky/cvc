@@ -1,0 +1,48 @@
+[
+    {
+        "id": "f5d58d56-49ca-4df3-83f9-df9d4ea59974",
+        "name": "使用次数限制",
+        "internal_id":"REDEEM_TIMES",
+        "description": "卡券使用次数限制，比如领用后，只能使用一次，默认一次。",
+        "rule_body":"{\"times\": 1}",
+        "creator":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+        "created_time":"2019-12-12T15:12:12+08:00" ,
+        "updated_time":null,
+        "deleted_time": null 
+        
+    },
+    {
+        "id": "b3df26d8-39c8-496c-8299-5da6febb1c60",
+        "name": "开始日期可偏移的生效时间",
+        "internal_id":"REDEEM_PERIOD_WITH_OFFSET",
+        "description": "卡券申领后的生效日期。offSetFromAppliedDay是相对申领日期的延后日期，单位为天。timeSpan是生效时间跨度。-1为没有到期就失效的时间。举例：offSetFromAppliedDay = 14，timeSpan， 用户在2020年1月10日领取，那么在2020年1月23日生效可兑换，2021年23日过期",
+        "rule_body": "{\"offSetFromAppliedDay\": 0,\"timeSpan\": 365}",
+        "creator":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+        "created_time":"2019-12-12T15:12:12+08:00",
+        "updated_time":null,
+        "deleted_time":null 
+        
+    },
+    {
+        "id": "1aabf6e1-7b7f-4c72-8526-1180eeaf0ef4",
+        "name": "在一定期限内的领用次数限制",
+        "internal_id":"APPLY_TIMES",
+        "description": "卡券申领次数限制，可以设置在若干天内的申请次数，也意味这卡券开放申请的时间限制。inDays为0时，则不限领用过期时间。当inDays为99时，则卡券发布后的99天内可以申领。",
+        "rule_body":"{ \"inDays\": 365, \"times\": 1 }",
+        "creator":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+        "created_time": "2019-12-12T15:12:12+08:00",
+        "updated_time": null,
+        "deleted_time": null  
+    },
+    {
+        "id": "f2b2025f-2e78-483c-b414-2935146e6d05",
+        "name": "限制在同品牌兑换",
+        "internal_id":"REDEEM_BY_SAME_BRAND",
+        "description": "核销时校验核销者所属的品牌是否和签发者所属的品牌一致，如果否，则不允许核销",
+        "rule_body":"{\"brand\": \"\"}",
+        "creator":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+        "created_time": "2020-01-06T15:12:12+08:00",
+        "updated_time": null,
+        "deleted_time": null  
+    }
+]

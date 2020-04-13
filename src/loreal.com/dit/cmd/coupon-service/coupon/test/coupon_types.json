@@ -1,0 +1,98 @@
+[
+    {
+        "name": "A",
+        "id": "63f9f1ce-2ad0-462a-b798-4ead5e5ab3a5",
+        "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+        "description": "普通的case",
+        "internal_description":"这是发布模板的内部描述",
+        "state": 0,
+        "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+        "visible_start_time":"2019-01-01T00:00:00+08:00" ,
+        "visible_end_time":"2030-01-31T23:59:59+08:00",
+        "created_time":"2019-12-12T15:12:12+08:00" ,
+        "deleted_time":null, 
+        "rules":
+            {
+                "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": 0 }",
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                "REDEEM_TIMES":"{\"times\": 1}"
+            }
+    },
+    {
+        "name": "B",
+        "id": "58b388ff-689e-445a-8bbd-8d707dbe70ef",
+        "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+        "description": "一些稍微特别的case, 可以申请2次，核销2次，下个月还可以兑换",
+        "internal_description":"这是发布模板的内部描述",
+        "state": 0,
+        "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+        "visible_start_time":"2019-01-01T00:00:00+08:00" ,
+        "visible_end_time":"2030-01-31T23:59:59+08:00",
+        "created_time":"2019-12-12T15:12:12+08:00" ,
+        "deleted_time":null, 
+        "rules":
+            {
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 2 }",
+                "REDEEM_TIMES":"{\"times\": 2}",
+                "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -31 }",
+                "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+            }
+    },
+    {
+        "name": "C",
+        "id": "abd73dbe-cc91-4b61-b10c-c6532d7a7770",
+        "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+        "description": "永远也不能被兑换",
+        "internal_description":"这是发布模板的内部描述",
+        "state": 0,
+        "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+        "visible_start_time":"2019-01-01T00:00:00+08:00" ,
+        "visible_end_time":"2030-01-31T23:59:59+08:00",
+        "created_time":"2019-12-12T15:12:12+08:00" ,
+        "deleted_time":null, 
+        "rules":
+            {
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 300 }",
+                "REDEEM_TIMES":"{\"times\": 3}",
+                "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": 31 }"
+            }
+    },
+    {
+        "name": "D",
+        "id": "ca0ff68f-dc05-488d-b185-660b101a1068",
+        "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+        "description": "延迟几天天兑换",
+        "internal_description":"这是发布模板的内部描述",
+        "state": 0,
+        "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+        "visible_start_time":"2019-01-01T00:00:00+08:00" ,
+        "visible_end_time":"2030-01-31T23:59:59+08:00",
+        "created_time":"2019-12-12T15:12:12+08:00" ,
+        "deleted_time":null, 
+        "rules":
+            {
+                "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -10 }",
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 20000 }",
+                "REDEEM_TIMES":"{\"times\": 200000}"
+            }
+    },
+    {
+        "name": "E",
+        "id": "7c0fb6b2-7362-4933-ad15-cd4ad9fccfec",
+        "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+        "description": "延迟几天天兑换",
+        "internal_description":"这是发布模板的内部描述",
+        "state": 0,
+        "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+        "visible_start_time":"2019-01-01T00:00:00+08:00" ,
+        "visible_end_time":"2030-01-31T23:59:59+08:00",
+        "created_time":"2019-12-12T15:12:12+08:00" ,
+        "deleted_time":null, 
+        "rules":
+            {
+                "REDEEM_PERIOD_WITH_OFFSET": "{\"offSetFromAppliedDay\": 0,\"timeSpan\": 365}",
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 20000 }",
+                "REDEEM_TIMES":"{\"times\": 200000}"
+            }
+    }
+]

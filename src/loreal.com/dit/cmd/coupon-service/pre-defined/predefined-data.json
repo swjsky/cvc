@@ -1,0 +1,462 @@
+{
+    "supported_rules" :[
+        {
+            "id": "547cdfa8-9118-45a1-ba9b-eeace8cc19c8",
+            "name": "自然月/季度/年核销",
+            "internal_id":"REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR",
+            "description": "卡券在申领的当月/当季/当年才能核销。另外可以设置一个提前几天结束的天数，默认为0天。",
+            "rule_body":"{\"unit\": \"MONTH\", \"endInAdvance\": 0}",
+            "creator":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "created_time":"2019-12-12T15:12:12+08:00" ,
+            "updated_time":null,
+            "deleted_time": null 
+            
+        },
+        {
+            "id": "f5d58d56-49ca-4df3-83f9-df9d4ea59974",
+            "name": "使用次数限制",
+            "internal_id":"REDEEM_TIMES",
+            "description": "卡券使用次数限制，比如领用后，只能使用一次，默认一次。",
+            "rule_body":"{\"times\": 1}",
+            "creator":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "created_time":"2019-12-12T15:12:12+08:00" ,
+            "updated_time":null,
+            "deleted_time": null 
+            
+        },
+        {
+            "id": "b3df26d8-39c8-496c-8299-5da6febb1c60",
+            "name": "开始日期可偏移的生效时间",
+            "internal_id":"REDEEM_PERIOD_WITH_OFFSET",
+            "description": "卡券申领后的生效日期。offSetFromAppliedDay是相对申领日期的延后日期，单位为天。timeSpan是生效时间跨度。-1为没有到期就失效的时间。举例：offSetFromAppliedDay = 14，timeSpan， 用户在2020年1月10日领取，那么在2020年1月23日生效可兑换，2021年23日过期",
+            "rule_body": "{\"offSetFromAppliedDay\": 0,\"timeSpan\": 365}",
+            "creator":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "created_time":"2019-12-12T15:12:12+08:00",
+            "updated_time":null,
+            "deleted_time":null 
+            
+        },
+        {
+            "id": "1aabf6e1-7b7f-4c72-8526-1180eeaf0ef4",
+            "name": "在一定期限内的领用次数限制",
+            "internal_id":"APPLY_TIMES",
+            "description": "卡券申领次数限制，可以设置在若干天内的申请次数，也意味这卡券开放申请的时间限制。inDays为0时，则不限领用过期时间。当inDays为99时，则卡券发布后的99天内可以申领。",
+            "rule_body":"{ \"inDays\": 365, \"times\": 1 }",
+            "creator":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "created_time": "2019-12-12T15:12:12+08:00",
+            "updated_time": null,
+            "deleted_time": null  
+        },
+        {
+            "id": "f2b2025f-2e78-483c-b414-2935146e6d05",
+            "name": "限制在同品牌兑换",
+            "internal_id":"REDEEM_BY_SAME_BRAND",
+            "description": "核销时校验核销者所属的品牌是否和签发者所属的品牌一致，如果否，则不允许核销",
+            "rule_body":"{\"brand\": \"\"}",
+            "creator":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "created_time": "2020-01-06T15:12:12+08:00",
+            "updated_time": null,
+            "deleted_time": null  
+        }
+    ],
+    "coupon_templates":[
+        {
+            "name": "欧莱雅入会礼模板",
+            "id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "欧莱雅的入会礼券，凭此券可以联系欧莱雅获取礼品。注意：需要支付邮费。",
+            "creator":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "created_time": "2019-12-12T15:12:12+08:00" ,
+            "updated_time": null,
+            "deleted_time": null, 
+            "rules":
+                {
+                    "REDEEM_PERIOD_WITH_OFFSET": "{\"offSetFromAppliedDay\": 14,\"timeSpan\": 365}",
+                    "APPLY_TIMES":"{ \"inDays\": 365, \"times\": 1 }",
+                    "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": 0 }",
+                    "REDEEM_TIMES":"{\"times\": 1}"
+                }
+        }
+    ],
+    "published_coupon_types":[
+        {
+            "name": "银卡入会礼",
+            "id": "ce654534-751b-402b-af88-d1fcf9138d7f",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-02-28T00:00:00+08:00" ,
+            "visible_end_time":"2023-12-31T23:59:59+08:00",
+            "created_time":"2020-02-24T15:12:12+08:00" ,
+            "deleted_time":null, 
+            "rules":
+                {
+                    "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                    "REDEEM_TIMES":"{\"times\": 1}",
+                    "REDEEM_PERIOD_WITH_OFFSET": "{\"offSetFromAppliedDay\": 0,\"timeSpan\": 365}",
+                    "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+                }
+        },
+        {
+            "name": "金卡入会礼",
+            "id": "bbec2e69-b2bf-4b7c-9d64-fc11e7d14787",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-02-28T00:00:00+08:00" ,
+            "visible_end_time":"2023-12-31T23:59:59+08:00",
+            "created_time":"2020-02-24T15:12:12+08:00" ,
+            "deleted_time":null, 
+            "rules":
+                {
+                    "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                    "REDEEM_TIMES":"{\"times\": 1}",
+                    "REDEEM_PERIOD_WITH_OFFSET": "{\"offSetFromAppliedDay\": 0,\"timeSpan\": 365}",
+                    "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+                }
+        },
+        {
+            "name": "黑卡入会礼",
+            "id": "13fb22bf-eede-48a8-89e8-a127d5cec403",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-02-28T00:00:00+08:00" ,
+            "visible_end_time":"2023-12-31T23:59:59+08:00",
+            "created_time":"2020-02-24T15:12:12+08:00" ,
+            "deleted_time":null, 
+            "rules":
+                {
+                    "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                    "REDEEM_TIMES":"{\"times\": 1}",
+                    "REDEEM_PERIOD_WITH_OFFSET": "{\"offSetFromAppliedDay\": 0,\"timeSpan\": 365}",
+                    "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+                }
+        },
+        {
+            "name": "2020银卡生日礼",
+            "id": "d9c92d0c-6acc-440a-9258-34eaa5b3f603",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-03-31T00:00:00+08:00" ,
+            "visible_end_time":"2020-12-31T23:59:59+08:00",
+            "created_time":"2020-02-24T15:12:12+08:00" ,
+            "deleted_time":null, 
+            "rules":
+                {
+                    "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 2 }",
+                    "REDEEM_TIMES":"{\"times\": 1}",
+                    "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -2 }",
+                    "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+                }
+        },
+        {
+            "name": "2020金卡生日礼",
+            "id": "baab906e-7a64-4635-babc-6c595b32f1f5",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-02-28T00:00:00+08:00" ,
+            "visible_end_time":"2023-12-31T23:59:59+08:00",
+            "created_time":"2020-02-24T15:12:12+08:00" ,
+            "deleted_time":null, 
+            "rules":
+                {
+                    "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 2 }",
+                    "REDEEM_TIMES":"{\"times\": 1}",
+                    "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -2 }",
+                    "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+                }
+        },
+        {
+            "name": "2020黑卡生日礼",
+            "id": "e7bd053a-fbe9-4784-abe6-6a794b6799c5",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-02-28T00:00:00+08:00" ,
+            "visible_end_time":"2023-12-31T23:59:59+08:00",
+            "created_time":"2020-02-24T15:12:12+08:00" ,
+            "deleted_time":null, 
+            "rules":
+            {
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 2 }",
+                "REDEEM_TIMES":"{\"times\": 1}",
+                "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -2 }",
+                "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+            }
+        },
+        {
+            "name": "2020银卡生日礼补发",
+            "id": "19412626-bb40-4669-9d19-25b2e531b14b",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-03-31T00:00:00+08:00" ,
+            "visible_end_time":"2020-12-31T23:59:59+08:00",
+            "created_time":"2020-02-24T15:12:12+08:00" ,
+            "deleted_time":null, 
+            "rules":
+                {
+                    "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                    "REDEEM_TIMES":"{\"times\": 1}",
+                    "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -2 }",
+                    "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+                }
+        },
+        {
+            "name": "2020金卡生日礼补发",
+            "id": "5c976420-75ce-43c5-be14-adb328073e03",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-02-28T00:00:00+08:00" ,
+            "visible_end_time":"2023-12-31T23:59:59+08:00",
+            "created_time":"2020-02-24T15:12:12+08:00" ,
+            "deleted_time":null, 
+            "rules":
+                {
+                    "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                    "REDEEM_TIMES":"{\"times\": 1}",
+                    "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -2 }",
+                    "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+                }
+        },
+        {
+            "name": "2020黑卡生日礼补发",
+            "id": "91d62b82-796b-47a4-a11d-a8b7cd8f7aeb",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-02-28T00:00:00+08:00" ,
+            "visible_end_time":"2023-12-31T23:59:59+08:00",
+            "created_time":"2020-02-24T15:12:12+08:00" ,
+            "deleted_time":null, 
+            "rules":
+            {
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                "REDEEM_TIMES":"{\"times\": 1}",
+                "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -2 }",
+                "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+            }
+        },
+        {
+            "name": "2020银卡生日礼欠货补领",
+            "id": "b25e16cc-bbbc-4b39-869d-ffae877ff790",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "2020银卡生日礼欠货补领",
+            "internal_description":"2020银卡生日礼欠货补领",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-03-21T00:00:00+08:00" ,
+            "visible_end_time":"2020-12-31T23:59:59+08:00",
+            "created_time":"2020-03-21T00:00:00+08:00" ,
+            "deleted_time":null, 
+            "rules":
+                {
+                    "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                    "REDEEM_TIMES":"{\"times\": 1}",
+                    "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -2 }",
+                    "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+                }
+        },
+        {
+            "name": "2020金卡生日礼欠货补领",
+            "id": "cb6b5e45-abea-408a-b727-f33e86a09fde",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "2020金卡生日礼欠货补领",
+            "internal_description":"2020金卡生日礼欠货补领",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-03-21T00:00:00+08:00" ,
+            "visible_end_time":"2020-12-31T23:59:59+08:00",
+            "created_time":"2020-03-21T00:00:00+08:00" ,
+            "deleted_time":null, 
+            "rules":
+                {
+                    "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                    "REDEEM_TIMES":"{\"times\": 1}",
+                    "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -2 }",
+                    "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+                }
+        },
+        {
+            "name": "2020黑卡生日礼欠货补领",
+            "id": "19334137-5d2c-4b1b-81b8-78268b8fba45",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "2020黑卡生日礼欠货补领",
+            "internal_description":"2020黑卡生日礼欠货补领",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-03-21T00:00:00+08:00" ,
+            "visible_end_time":"2020-12-31T23:59:59+08:00",
+            "created_time":"2020-03-21T00:00:00+08:00" ,
+            "deleted_time":null, 
+            "rules":
+            {
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                "REDEEM_TIMES":"{\"times\": 1}",
+                "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -2 }",
+                "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+            }
+        },
+        {
+            "name": "2020普卡生日礼延期补领",
+            "id": "48210cac-80f8-4144-9a45-42255995ef17",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "该客人可享受普卡延期生日礼，本月任意购买即享3件生日礼套装，请录入MARS。",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-03-31T00:00:00+08:00" ,
+            "visible_end_time":"2020-12-31T23:59:59+08:00",
+            "created_time":"2020-04-10T11:30:00+08:00" ,
+            "deleted_time":null, 
+            "rules":
+            {
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                "REDEEM_TIMES":"{\"times\": 1}",
+                "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -2 }",
+                "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+            }
+        },
+        {
+            "name": "2020银卡生日礼延期补领",
+            "id": "87c67416-2c5e-4fe9-918c-f78c6a91ce4b",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "该客人可享受银卡延期生日礼，本月回柜即可领取银卡生日礼。",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-03-31T00:00:00+08:00" ,
+            "visible_end_time":"2020-12-31T23:59:59+08:00",
+            "created_time":"2020-04-10T11:30:00+08:00" ,
+            "deleted_time":null, 
+            "rules":
+            {
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                "REDEEM_TIMES":"{\"times\": 1}",
+                "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -2 }",
+                "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+            }
+        },
+        {
+            "name": "2020金卡生日礼延期补领",
+            "id": "95197b25-ad00-410e-8371-0ef664d9e65f",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "该客人可享受金卡延期生日礼，本月回柜即可领取金卡生日礼。",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-03-31T00:00:00+08:00" ,
+            "visible_end_time":"2020-12-31T23:59:59+08:00",
+            "created_time":"2020-04-10T11:30:00+08:00" ,
+            "deleted_time":null, 
+            "rules":
+            {
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                "REDEEM_TIMES":"{\"times\": 1}",
+                "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -2 }",
+                "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+            }
+        },
+        {
+            "name": "2020黑卡生日礼延期补领",
+            "id": "8c8a7a35-11b9-4834-aeca-b2f6b3defd1a",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "该客人可享受黑卡延期生日礼，本月回柜即可领取黑卡生日礼。",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-03-31T00:00:00+08:00" ,
+            "visible_end_time":"2020-12-31T23:59:59+08:00",
+            "created_time":"2020-04-10T11:30:00+08:00" ,
+            "deleted_time":null, 
+            "rules":
+            {
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                "REDEEM_TIMES":"{\"times\": 1}",
+                "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR":"{ \"unit\": \"MONTH\", \"endInAdvance\": -2 }",
+                "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+            }
+        },
+        {
+            "name": "2020银卡生日礼延期欠货补领",
+            "id": "2c7f72b7-0707-4795-a270-b469cc6ee0d9",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "该客人可享受生日礼延期欠货补领，回柜即可领取银卡生日礼。",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-03-31T00:00:00+08:00" ,
+            "visible_end_time":"2020-12-31T23:59:59+08:00",
+            "created_time":"2020-04-13T13:50:00+08:00" ,
+            "deleted_time":null, 
+            "rules":
+            {
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                "REDEEM_TIMES":"{\"times\": 1}",
+                "REDEEM_PERIOD_WITH_OFFSET": "{\"offSetFromAppliedDay\": 0,\"timeSpan\": 270}",
+                "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+            }
+        },
+        {
+            "name": "2020金卡生日礼延期欠货补领",
+            "id": "476302e9-25f3-4504-8cc4-691cf68f09cd",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "该客人可享受生日礼延期欠货补领，回柜即可领取金卡生日礼。",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-03-31T00:00:00+08:00" ,
+            "visible_end_time":"2020-12-31T23:59:59+08:00",
+            "created_time":"2020-04-13T13:50:00+08:00" ,
+            "deleted_time":null, 
+            "rules":
+            {
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                "REDEEM_TIMES":"{\"times\": 1}",
+                "REDEEM_PERIOD_WITH_OFFSET": "{\"offSetFromAppliedDay\": 0,\"timeSpan\": 270}",
+                "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+            }
+        },
+        {
+            "name": "2020黑卡生日礼延期欠货补领",
+            "id": "b2599853-e59d-4b98-83f8-3350ce51a650",
+            "template_id": "dba25cb3-4ad9-44c2-8815-6d8b12c10f5a",
+            "description": "该客人可享受生日礼延期欠货补领，本月回柜即可领取黑卡生日礼。",
+            "internal_description":"这是发布模板的内部描述，给模板发布者以及开发者开发时的参考。不会显示给终端用户",
+            "state": 0,
+            "publisher":"ff27204e-6ef2-48e2-a437-7e48cc49d659",
+            "visible_start_time":"2020-03-31T00:00:00+08:00" ,
+            "visible_end_time":"2020-12-31T23:59:59+08:00",
+            "created_time":"2020-04-13T13:50:00+08:00" ,
+            "deleted_time":null, 
+            "rules":
+            {
+                "APPLY_TIMES":"{ \"inDays\": 0, \"times\": 1 }",
+                "REDEEM_TIMES":"{\"times\": 1}",
+                "REDEEM_PERIOD_WITH_OFFSET": "{\"offSetFromAppliedDay\": 0,\"timeSpan\": 270}",
+                "REDEEM_BY_SAME_BRAND":"{\"brand\": \"\"}"
+            }
+        }
+    ]
+}
