@@ -1020,7 +1020,7 @@ func Test_RedeemCouponByType(t *testing.T) {
 			return false
 		})
 		Convey("Should be ErrRequesterForbidden", func() {
-			_, err := RedeemCouponByType(requester, "", "", "")
+			_, err := RedeemCouponByType(nil, requester, "", "", "")
 			So(err, ShouldEqual, &ErrRequesterForbidden)
 		})
 		pg.Unpatch()
@@ -1035,7 +1035,7 @@ func Test_RedeemCouponByType(t *testing.T) {
 			return nil, &ErrCouponTemplateNotFound
 		})
 		Convey("Should be ErrCouponTemplateNotFound", func() {
-			errMap, _ := RedeemCouponByType(requester, "abc", "", "")
+			errMap, _ := RedeemCouponByType(nil, requester, "abc", "", "")
 			So(len(errMap), ShouldEqual, 1)
 			So(len(errMap["abc"]), ShouldEqual, 1)
 			So(errMap["abc"][0], ShouldEqual, &ErrCouponTemplateNotFound)
@@ -1054,7 +1054,7 @@ func Test_RedeemCouponByType(t *testing.T) {
 			pg2 := monkey.Patch(GetCoupons, func(_ *base.Requester, _ string, _ string) ([]*Coupon, error) {
 				return nil, nil
 			})
-			errMap, _ := RedeemCouponByType(requester, "abc", "", "")
+			errMap, _ := RedeemCouponByType(nil, requester, "abc", "", "")
 			So(len(errMap), ShouldEqual, 1)
 			So(len(errMap["abc"]), ShouldEqual, 1)
 			So(errMap["abc"][0], ShouldEqual, &ErrCouponNotFound)
@@ -1065,7 +1065,7 @@ func Test_RedeemCouponByType(t *testing.T) {
 			pg2 := monkey.Patch(GetCoupons, func(_ *base.Requester, _ string, _ string) ([]*Coupon, error) {
 				return []*Coupon{}, nil
 			})
-			errMap, _ := RedeemCouponByType(requester, "abc", "", "")
+			errMap, _ := RedeemCouponByType(nil, requester, "abc", "", "")
 			So(len(errMap), ShouldEqual, 1)
 			So(len(errMap["abc"]), ShouldEqual, 1)
 			So(errMap["abc"][0], ShouldEqual, &ErrCouponNotFound)
@@ -1076,7 +1076,7 @@ func Test_RedeemCouponByType(t *testing.T) {
 			pg2 := monkey.Patch(GetCoupons, func(_ *base.Requester, _ string, _ string) ([]*Coupon, error) {
 				return make([]*Coupon, 2), nil
 			})
-			errMap, _ := RedeemCouponByType(requester, "abc", "", "")
+			errMap, _ := RedeemCouponByType(nil, requester, "abc", "", "")
 			So(len(errMap), ShouldEqual, 1)
 			So(len(errMap["abc"]), ShouldEqual, 1)
 			So(errMap["abc"][0], ShouldEqual, &ErrCouponTooMuchToRedeem)
@@ -1101,7 +1101,7 @@ func Test_RedeemCouponByType(t *testing.T) {
 		})
 
 		Convey("Should be ErrRuleNotFound", func() {
-			errMap, _ := RedeemCouponByType(requester, "abc", "", "")
+			errMap, _ := RedeemCouponByType(nil, requester, "abc", "", "")
 			So(len(errMap), ShouldEqual, 1)
 			So(len(errMap["abc"]), ShouldEqual, 1)
 			So(errMap["abc"][0], ShouldEqual, &ErrRuleNotFound)
@@ -1130,7 +1130,7 @@ func Test_RedeemCouponByType(t *testing.T) {
 			})
 
 			Convey("Should be ErrRuleNotFound", func() {
-				errMap, _ := RedeemCouponByType(requester, "abc", "", "")
+				errMap, _ := RedeemCouponByType(nil, requester, "abc", "", "")
 				So(len(errMap), ShouldEqual, 1)
 				So(len(errMap["abc"]), ShouldEqual, 1)
 				So(errMap["abc"][0], ShouldEqual, &ErrRuleNotFound)
@@ -1143,9 +1143,12 @@ func Test_RedeemCouponByType(t *testing.T) {
 				pg4 := monkey.Patch(validateCouponRules, func(_ *base.Requester, _ string, _ *Coupon) ([]error, error) {
 					return nil, &ErrRuleNotFound
 				})
-
+				pg5 := monkey.Patch(GetCoupons, func(_ *base.Requester, consumerID string, _ string) ([]*Coupon, error) {
+					c := _aCoupon(consumerID, "xxx", "yyy", "def", 0, nil)
+					return []*Coupon{c}, nil
+				})
 				Convey("Should be ErrRuleNotFound", func() {
-					errMap, _ := RedeemCouponByType(requester, "abc,def", "", "")
+					errMap, _ := RedeemCouponByType(nil, requester, "abc,def", "", "")
 					So(len(errMap), ShouldEqual, 2)
 					So(len(errMap["abc"]), ShouldEqual, 1)
 					So(len(errMap["def"]), ShouldEqual, 1)
@@ -1153,6 +1156,7 @@ func Test_RedeemCouponByType(t *testing.T) {
 					So(errMap["def"][0], ShouldEqual, &ErrRuleNotFound)
 				})
 				pg4.Unpatch()
+				pg5.Unpatch()
 			})
 
 			Convey("first consumer has error", func() {
@@ -1162,14 +1166,19 @@ func Test_RedeemCouponByType(t *testing.T) {
 					}
 					return nil, nil
 				})
+				pg5 := monkey.Patch(GetCoupons, func(_ *base.Requester, consumerID string, _ string) ([]*Coupon, error) {
+					c := _aCoupon(consumerID, "xxx", "yyy", "def", 0, nil)
+					return []*Coupon{c}, nil
+				})
 
 				Convey("Should be ErrRuleNotFound", func() {
-					errMap, _ := RedeemCouponByType(requester, "abc,def", "", "")
+					errMap, _ := RedeemCouponByType(nil, requester, "abc,def", "", "")
 					So(len(errMap), ShouldEqual, 1)
 					So(len(errMap["abc"]), ShouldEqual, 1)
 					So(errMap["abc"][0], ShouldEqual, &ErrRuleNotFound)
 				})
 				pg4.Unpatch()
+				pg5.Unpatch()
 			})
 
 			Convey("second consumer has error", func() {
@@ -1179,14 +1188,19 @@ func Test_RedeemCouponByType(t *testing.T) {
 					}
 					return nil, nil
 				})
+				pg5 := monkey.Patch(GetCoupons, func(_ *base.Requester, consumerID string, _ string) ([]*Coupon, error) {
+					c := _aCoupon(consumerID, "xxx", "yyy", "def", 0, nil)
+					return []*Coupon{c}, nil
+				})
 
 				Convey("Should be ErrRuleNotFound", func() {
-					errMap, _ := RedeemCouponByType(requester, "abc,def", "", "")
+					errMap, _ := RedeemCouponByType(nil, requester, "abc,def", "", "")
 					So(len(errMap), ShouldEqual, 1)
 					So(len(errMap["def"]), ShouldEqual, 1)
 					So(errMap["def"][0], ShouldEqual, &ErrRuleNotFound)
 				})
 				pg4.Unpatch()
+				pg5.Unpatch()
 			})
 		})
 
@@ -1213,7 +1227,7 @@ func Test_RedeemCouponByType(t *testing.T) {
 		})
 
 		Convey("Should be many errors", func() {
-			errMap, _ := RedeemCouponByType(requester, "abc", "", "")
+			errMap, _ := RedeemCouponByType(nil, requester, "abc", "", "")
 			So(errMap, ShouldNotBeNil)
 			So(len(errMap["abc"]), ShouldEqual, 2)
 			So(errMap["abc"][0], ShouldEqual, &ErrRuleNotFound)
@@ -1248,10 +1262,15 @@ func Test_RedeemCouponByType(t *testing.T) {
 			return nil, &ErrRuleNotFound
 		})
 
+		pg6 := monkey.Patch(_sendRedeemMessage, func(_ []*Coupon, _ string) {
+			return
+		})
+
 		Convey("Should be ErrRuleNotFound", func() {
-			_, err := RedeemCouponByType(requester, "abc", "", "")
+			_, err := RedeemCouponByType(nil, requester, "abc", "", "")
 			So(err, ShouldNotBeNil)
 		})
+		pg6.Unpatch()
 		pg5.Unpatch()
 		pg4.Unpatch()
 		pg3.Unpatch()
@@ -1291,7 +1310,7 @@ func Test_RedeemCouponByType(t *testing.T) {
 		})
 
 		Convey("Should be ErrRuleNotFound", func() {
-			_, err := RedeemCouponByType(requester, "abc", "", "")
+			_, err := RedeemCouponByType(nil, requester, "abc", "", "")
 			So(err, ShouldEqual, &ErrRuleNotFound)
 		})
 		pg7.Unpatch()
@@ -1339,7 +1358,7 @@ func Test_RedeemCouponByType(t *testing.T) {
 		})
 
 		Convey("Should be ErrRuleNotFound", func() {
-			_, err := RedeemCouponByType(requester, "abc", "", "")
+			_, err := RedeemCouponByType(nil, requester, "abc", "", "")
 			So(err, ShouldEqual, &ErrRuleNotFound)
 		})
 		pg8.Unpatch()
@@ -1393,7 +1412,7 @@ func Test_RedeemCouponByType(t *testing.T) {
 		})
 
 		Convey("Should be ErrRuleNotFound", func() {
-			_, err := RedeemCouponByType(requester, "abc", "", "")
+			_, err := RedeemCouponByType(nil, requester, "abc", "", "")
 			So(err, ShouldEqual, &ErrRuleNotFound)
 		})
 		pg9.Unpatch()
@@ -1456,7 +1475,7 @@ func Test_RedeemCouponByType(t *testing.T) {
 		})
 
 		Convey("Should commited and sent msg", func() {
-			_, _ = RedeemCouponByType(requester, "abc", "", "")
+			_, _ = RedeemCouponByType(nil, requester, "abc", "", "")
 			So(bCommited, ShouldBeTrue)
 			So(bSendMsg, ShouldBeTrue)
 		})

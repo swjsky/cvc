@@ -3,6 +3,7 @@ package coupon
 import (
 	"database/sql"
 	"errors"
+	"net/http"
 	"strconv"
 
 	// "fmt"
@@ -16,6 +17,8 @@ import (
 	"loreal.com/dit/utils"
 
 	"github.com/google/uuid"
+	"github.com/jinzhu/now"
+	"github.com/mitchellh/mapstructure"
 )
 
 var bufferSize int = 5
@@ -391,6 +394,60 @@ func GetCoupons(requester *base.Requester, consumerID string, couponTypeID strin
 	return cs, nil
 }
 
+// RevokeCoupon 删除卡券
+func RevokeCoupon(requester *base.Requester, couponID string) error {
+	defer func() {
+		if v := recover(); nil != v {
+			log.Printf("[RevokeCoupon] 未知错误: %#v\n", v)
+		}
+	}()
+
+	if !requester.HasRole(base.ROLE_COUPON_ISSUER) {
+		return &ErrRequesterForbidden
+	}
+
+	// 查询coupon
+	c, err := GetCoupon(requester, couponID)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	// 记录Transaction
+	var t = Transaction{
+		ID:          uuid.New().String(),
+		CouponID:    c.ID,
+		ActorID:     requester.UserID,
+		TransType:   TTDeleteCoupon,
+		ExtraInfo:   "",
+		CreatedTime: time.Now().Local(),
+	}
+
+	tx, err := dbConnection.Begin()
+	if err != nil {
+		log.Println(err)
+		return errors.New("内部错误")
+	}
+
+	err = createCouponTransaction(&t)
+	if nil != err {
+		tx.Rollback()
+		return err
+	}
+
+	// update coupon state
+	c.State = SRevoked
+	err = updateCouponState(c)
+	if nil != err {
+		tx.Rollback()
+		return err
+	}
+
+	tx.Commit()
+
+	return nil
+}
+
 // GetCouponsWithTransactions - Get conpons and specified type of transactions
 func GetCouponsWithTransactions(requester *base.Requester, consumerID string, couponTypeID string, transTypeID string) ([]*Coupon, error) {
 	defer func() {
@@ -519,9 +576,46 @@ func _addErrForConsumer(mps map[string][]error, consumerID string, err error) {
 	mps[consumerID] = append(mps[consumerID], err)
 }
 
+// 获取卡券的过期时间
+func getExpireTime(c *Coupon) (*time.Time, error) {
+	if nil == c {
+		return nil, errors.New("getExpireTime nil parameter")
+	}
+
+	var ntu natureTimeUnit
+	for ruleInternalID, ruleBody := range c.GetRules() {
+		if "REDEEM_IN_CURRENT_NATURE_MONTH_SEASON_YEAR" != ruleInternalID {
+			continue
+		}
+
+		var rule = findRule(ruleInternalID)
+		if nil == rule {
+			return nil, errors.New("getExpireTime nil rule by ruleInternalID")
+		}
+
+		if err := mapstructure.Decode(ruleBody.(map[string]interface{}), &ntu); err != nil {
+			return nil, errors.New("getExpireTime bad rule format")
+		}
+	}
+
+	if base.IsBlankString(ntu.Unit) || ntu.Unit != "MONTH" {
+		return nil, errors.New("getExpireTime unsport rule unit:" + ntu.Unit)
+	}
+
+	var end time.Time
+	switch ntu.Unit {
+	case "MONTH":
+		{
+			ctMonth := now.With(*c.CreatedTime)
+			end = ctMonth.EndOfMonth().AddDate(0, 0, ntu.EndInAdvance*-1)
+		}
+	}
+	return &end, nil
+}
+
 // RedeemCouponByType 根据卡券类型兑换卡券，
-// 要求消费者针对该类型卡券类型只有一张卡券
-func RedeemCouponByType(requester *base.Requester, consumerIDs string, couponTypeID string, extraInfo string) (map[string][]error, error) {
+// 当消费者针对该类型卡券有多张时，核销最近一张要过期的卡券
+func RedeemCouponByType(r *http.Request, requester *base.Requester, consumerIDs string, couponTypeID string, extraInfo string) (map[string][]error, error) {
 	defer func() {
 		if v := recover(); nil != v {
 			log.Printf("[RedeemCouponByType] 未知错误: %#v\n", v)
@@ -553,13 +647,32 @@ func RedeemCouponByType(requester *base.Requester, consumerIDs string, couponTyp
 			continue
 		}
 
-		// 目前限制只有一份卡券时才可以兑换
+		c := cs[0]
+
+		// 有多张时，核销最近一张要过期的卡券
 		if len(cs) > 1 {
-			_addErrForConsumer(allConsumersRuleCheckErrors, consumerID, &ErrCouponTooMuchToRedeem)
-			continue
+			if r != nil && r.Header != nil && r.Header["Flag"] != nil { //获取指定的request header, 并判断
+				minExp, _ := getExpireTime(c)
+				for _, cp := range cs { //遍历出其中最近一张要过期的卡券
+					expire, err := getExpireTime(cp)
+					if err != nil {
+						continue
+					}
+					if expire.Before(*minExp) {
+						minExp = expire
+						c = cp
+					} else if expire.Equal(*minExp) {
+						if cp.CreatedTime.Before(*(c.CreatedTime)) {
+							c = cp
+						}
+					}
+				}
+			} else {
+				_addErrForConsumer(allConsumersRuleCheckErrors, consumerID, &ErrCouponTooMuchToRedeem)
+				continue
+			}
 		}
 
-		c := cs[0]
 		allCoupons = append(allCoupons, c)
 
 		err = validateCouponBasicForRedeem(c, consumerID)

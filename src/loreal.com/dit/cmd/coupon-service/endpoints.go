@@ -369,6 +369,20 @@ func couponHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
+	case "PUT":
+		{ // /api/coupons/{coupon-id}/cancel
+			switch lastNode {
+			case "cancel":
+				{
+					couponID := urlNodes[l-2]
+					putCouponCancel(requester, couponID, w, r)
+				}
+			default:
+				{
+					w.WriteHeader(http.StatusNotImplemented)
+				}
+			}
+		}
 	default:
 		{
 			w.WriteHeader(http.StatusMethodNotAllowed)
@@ -463,6 +477,29 @@ func getCoupon(requester *base.Requester, couponID string, w http.ResponseWriter
 	outputJSON(w, &c)
 }
 
+func putCouponCancel(requester *base.Requester, couponID string, w http.ResponseWriter, r *http.Request) {
+	if !requester.HasRole(base.ROLE_COUPON_ISSUER) && !requester.HasRole(base.ROLE_COUPON_REDEEMER) {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+
+	//revoke一张卡券
+	err := coupon.RevokeCoupon(requester, sanitizePolicy.Sanitize(couponID))
+	if nil != err {
+		if sql.ErrConnDone == err {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		if &(coupon.ErrRequesterForbidden) == err {
+			w.WriteHeader(http.StatusForbidden)
+			return
+		}
+
+		base.WriteErrorResponse(w, http.StatusBadRequest, "application/json;charset=utf-8", err)
+		return
+	}
+}
+
 func postCoupon(requester *base.Requester, w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		log.Printf("[ERR] - [gatewayHandler][ParseForm], err: %v", err)
@@ -507,7 +544,7 @@ func postCoupon(requester *base.Requester, w http.ResponseWriter, r *http.Reques
 
 // couponID 和 couponTypeID 只能二选一。
 // 当 couponID 不为空时，根据 couponID 来核销。
-// 当 couponID 为空时，并且 couponTypeID 不为空，则根据 couponTypeID 来核销，但要判断是否只有一张卡券，如果有多张，将会返回错误。
+// 当 couponID 为空时，并且 couponTypeID 不为空，则根据 couponTypeID 来核销，如果有多张，将核销最近一张要过期的卡券。
 func postCouponRedemption(requester *base.Requester, w http.ResponseWriter, r *http.Request) {
 	if !requester.HasRole(base.ROLE_COUPON_REDEEMER) {
 		w.WriteHeader(http.StatusForbidden)
@@ -533,7 +570,7 @@ func postCouponRedemption(requester *base.Requester, w http.ResponseWriter, r *h
 
 	if base.IsBlankString(couponID) && !base.IsBlankString(couponTypeID) && base.IsValidUUID(couponTypeID) {
 		//根据卡券类型核销唯一的一张卡券
-		errMap, err := coupon.RedeemCouponByType(requester, consumerIDs, couponTypeID, extraInfo)
+		errMap, err := coupon.RedeemCouponByType(r, requester, consumerIDs, couponTypeID, extraInfo)
 		if nil != err {
 			if &(coupon.ErrRequesterForbidden) == err {
 				w.WriteHeader(http.StatusForbidden)
